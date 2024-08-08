@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meer Stress Met Merius</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+            background-color: rgb(17, 160, 255);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: red;
+        }
+
+        .top-bar {
+            font-size: 150%;
+            padding: .5rem;
+            padding-inline: 1rem;
+            text-wrap: balance;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .hero {
+            background-color: red;
+            height: 40dvh;
+        }
+
+        .cliffs-notes {
+            font-size: 120%;
+            background-color: aqua;
+            padding: 0.33rem;
+            padding-block-end: 0.66rem;
+            font-style: italic;
+        }
+
+        .small-caps {
+            font-variant: small-caps;
+        }
+
+        .frown {
+            height: 1em;
+            border-radius: 5px;
+        }
+
+        #months-since-june-2023 {
+            font-weight: bold;
+        }
+
+        .mail-left {
+            float: left;
+            width: 40dvw;
+        }
+
+        .mail-right {
+            float: right;
+            width: 40dvw;
+        }
+
+        .clear-fix {
+            clear: both;
+        }
+
+        .mail {
+            background-color: aqua;
+            height: 10em;
+            padding: 0.33rem;
+            display: inline-block;
+        }
+
+        dialog {
+            padding: 2rem;
+        }
+    </style>
+
+    <!-- <meta http-equiv="refresh" content="1"> -->
+</head>
+
+<body>
+    <h1 class="top-bar">
+        <img class="frown"
+            src="
+            data:img/png;base64,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"
+            alt=" An unhappy frown">
+        <span>Ook Meer Stress Met Merius?</span>
+        <button class="small-caps email-me">contact</button>
+    </h1>
+
+    <!-- <div class="hero"></div> -->
+
+    <div class="cliffs-notes">
+        Welkom op de site, &quot;Meer Stress Met Merius&quot; waarop ik mijn ervaringen met Merius deel.<br><br>
+        Toen ik <output id="years-since-2019"></output> jaar geleden ging samenwonen sloot ik onze hypotheek af bij
+        Merius Hypotheken. Na de scheiding sloot ik mijn nieuwe hypotheek ook weer af bij Merius Hypotheken, omdat ik de
+        rente mee zou kunnen nemen van de oude hypotheek naar mijn nieuwe hypotheek, "de verhuisregeling".
+        Ik ben nu vanaf juni 2023 al <output id="months-since-june-2023"></output> maanden in conclaaf met Merius om
+        ervoor te zorgen dat zij deze belofte nakomen, en al die tijd betaal ik dus al veel te veel rente.<br><br>
+
+        Hieronder zal ik een deel van mijn correspondentie met Merius delen. Mochten jullie zelf slechte ervaringen met
+        Merius Hypotheken hebben, en je wilt ze met mij delen, klik dan op de
+        <span class="small-caps" class="email-me">contact</span>-knop in de bovenste balk.<br><br>
+        Mijn klacht ligt inmiddels bij het <a href="https://www.kifid.nl/" target="_blank">KIFID</a>, maar ik ben ook
+        van plan om KASSA, RADAR, Max-Meldpunt, ombudsman, en de Consumentenbond aan te schrijven. Mochten jullie
+        ook in conclaaf zijn met Merius, stuur mij dan jullie verhaal. Dan zal ik dat, met jullie toestemming, aan mijn
+        dossier bij de diverse consumenteninstanties toevoegen zodat zij merken dat mijn situatie geen uitzonderlijk
+        geval is. Afhankelijk van de hoeveelheid reacties, zouden zij er misschien een item
+        van kunnen maken, zodat wij wat meer druk op Merius kunnen zetten.
+    </div>
+
+    <h2>Hieronder uittreksels uit de diverse mails tussen mij en Merius.</h2>
+
+    <span>Als je op een mail klikt, kun je de volledige mail lezen.</span>
+
+    <dialog id="mail-13-02-2024">
+        Geachte mevrouw X.,<br><br>
+        Hedenmorgen hebben we uw mail ontvangen, waarin wordt aangegeven dat het voor Merius niet mogelijk is de
+        klacht binnen de gestelde termijn van 21 dagen, rekenend vanaf 26 januari 2024 (de datum van uw
+        ontvangstbevestiging) te behandelen. Afgelopen dinsdag, 27 februari 2024, was deze termijn reeds verstreken.
+        In de correspondentie van 26 januari 2024 wordt aangegeven, dat wanneer de verwerkingstijd van 21 dagen
+        (werkdagen?) niet wordt gehaald er tijdig bericht zou worden verzonden.
+        Kunt u aangeven, waarom wij niet tijdig op de hoogte zijn gesteld dat deze periode van 21 dagen niet
+        haalbaar was voor Merius, zodat wij onze relatie, de heer Meer Stress Met Merius, hiervan op de hoogte kunnen
+        stellen.
+    </dialog>
+
+    <dialog id="mail-20-03-2024">
+        Geachte mevrouw X.,<br><br>
+
+        Op donderdag 29 februari 2024 ontvingen we onderstaande mail van u waarin u aangegeven heeft de, reeds verlopen
+        behandeltermijn, te willen verlengen met 14 dagen.
+        N.a.v. deze mail hebben wij u op 5 maart 2024 een mail verzonden, waarop we geen antwoord hebben mogen ontvangen
+        van u.
+
+        De door u zelf voorgestelde behandeltermijn van 14 dagen was reeds op donderdag 14 maart 2024 verstreken en
+        wederom geen enkel bericht van u ontvangen.
+        Ook geen bericht van Merius dat de termijn eventueel, om wat voor reden dan ook, wederom verlengd zou moeten
+        worden.
+
+        De heer Meer Stress Met Merius, onze gezamenlijke relatie, is het langzamerhand erg beu. Niet alleen dat zijn
+        rente nog niet is
+        aangepast, middels gebruik te maken van de verhuisregeling, maar ook zeker over het ontbreken van informatie en
+        het niet tijdig reageren voor de door u zelf voorgestelde behandeltermijnen. Hij voelt zich totaal niet serieus
+        genomen door Merius.
+
+        We mogen er van uit gaan, gezien de huidige gang van zaken en het niet en zeker niet tijdig reageren van Merius
+        dat het gebruik maken, met terugwerkende kracht, van de verhuisregeling, nu toch snel door Merius gerealiseerd
+        wordt.
+
+        Graag hopen we op uw spoedige reactie.
+
+
+    </dialog>
+
+    <dialog id="mail-1-20-03-2024">
+        Geachte mevrouw X.,<br><br>
+        Ik wil graag weten bij wie ik een klacht kan indienen over de klachten afdeling daar ik er van uit ga dat die
+        niet een klacht over zich zelf in behandeling mogen nemen
+
+        Mailbericht 21 - 3 -2024
+
+        Geachte heer Meer Stress Met Merius,
+
+        In antwoord op uw vraag kan ik u het volgende mededelen.
+        Een klacht over de klachtenafdeling kan ingediend worden via het klachtenformulier op onze website. De klacht
+        wordt dan opgepakt en door een andere afdeling beoordeeld.
+        U vindt het formulier via de volgende link:Klachtenformulier - Merius Hypotheken
+
+        Inzake uw oorspronkelijke klacht kan ik u mededelen dat het op dit moment wordt opgepakt. De verwachting is dat
+        u begin volgende mail een brief ontvangt via uw e-mail.
+
+        mail 13 - 06 - 2024
+
+        Tegelijkertijd moeten wij u informeren dat klachten over de klachtenafdeling niet relateren onder een product of
+        dienst van Merius Hypotheken waarover klachten kunnen worden ingediend. Wij verklaren uw klacht dan ook
+        niet-ontvankelijk en deze wordt ook niet verder afgehandeld conform de klachtenprocedure (zie bijlage).
+
+
+    </dialog>
+
+    <dialog id="mail-01-04-2024">
+        Geachte mevrouw X.,<br><br>
+        Bij deze wil ik een officiële klacht indienen over de klachtenafdeling van Merius Hypotheken.
+        24 - 01 - 2024 heeft mijn financiële vertegenwoordiger namens mij een klacht ingediend m.b.t. de verhuisregeling
+        van mijn hypotheekrente.
+        26 - 01 - 2024 werd deze klacht beantwoord met een brief waarin ons 21 dagen behandelingstermijn werd toegezegd
+        met de aanvulling, dat als deze niet gehaald kon worden, dat wij dan tijdig geïnformeerd zouden worden dat deze
+        termijn niet gehaald kon worden.
+        27 - 02 - 2024 21 WERKDAGEN later hadden wij nog steeds niets gehoord van de betreffende afdeling m.b.t de
+        inhoudelijke behandeling of een tijdig bericht dat deze 21 dagen termijn niet haalbaar was. Wij zijn toen zelf
+        maar in de pen en telefoon geklommen om een reactie te krijgen.
+        29 - 02 - 2024 kregen wij een mail waarin wederom 14 dagen behandelingstermijn werd toegezegd, wederom met de
+        belofte om als deze termijn niet haalbaar zou zijn, ons tijdig daarvan op de hoogte te brengen.
+        Ook deze termijn verstreek zonder enig bericht van de betreffende afdeling.
+        Opnieuw zijn wij zelf weer in de pen en telefoon moeten kruipen, alvorens er 21 - 03 - 2024 een reactie van uw
+        KLANTENservice kwam die ons enige duidelijkheid verschafte, namelijk dat de klacht eindelijk opgepakt was en dat
+        wij begin van de daaropvolgende week een mail konden verwachten.
+        Wij kregen echter geen mail met antwoorden maar een telefoontje van Mw. Y., die ons vertelde dat zij nieuw
+        was op de afdeling klachtenafhandeling en zich helemaal overnieuw in moest lezen in onze klacht en nog niet alle
+        gegevens beschikbaar had.
+        Dit hele traject loopt al sinds ik januari 2023 de hypotheek aanvraag deed en de verkoop van mijn woning op 15 -
+        06 - 2023.
+
+        U zult begrijpen dat mijn geduld op begint te raken, vandaar deze klacht.
+
+        Hopende dat uw antwoord niet ook zo lang op zich laat wachten groet ik u;
+
+        een zeer ontevreden klant Meer Stress Met Merius
+    </dialog>
+
+    <dialog id="mail-12-04-2024">
+
+        Geachte heer Meer Stress Met Merius,
+
+        Middels deze email willen wij de ontvangst van uw emailberichten en de via de website van Merius Hypotheken
+        ingediende klachtenformulieren bevestigen. Een kopie van deze bevestiging sturen wij tevens aan uw financieel
+        adviseur, de heer Financieel adviseur.
+        Het betreft de door u verzonden emailberichten en klachtenformulieren van:
+        • Dinsdag 27 februari 2024 12:14, email
+        • Dinsdag 27 februari 2024 12:20, email
+        • Woensdag 28 februari 2024 11:57, email
+        • Woensdag 28 februari 2024 11:58, email
+        • Woensdag 28 februari 2024 13:18, email
+        • Woensdag 28 februari 2024 13:36, email
+        • Woensdag 28 februari 2024 13:45, email
+        • Woensdag 28 februari 2024 14:09, email
+        • Woensdag 28 februari 2024 15:49, email
+        • Donderdag 29 februari 2024 08:29, email
+        • Donderdag 29 februari 2024 20:06, email
+        • Dinsdag 5 maart 2024 17:38, email
+        • Woensdag 13 maart 2024 19:31, email
+        • Woensdag 13 maart 2024 19:55, email
+        • Woensdag 13 maart 2024 20:06, email
+        • Woensdag 13 maart 2024 20:23, email
+        • Woensdag 13 maart 2024 20:50, email
+        • Woensdag 13 maart 2024 21:04, email
+        • Woensdag 13 maart 2024 21:11, email
+        • Donderdag 14 maart 2024 09:52, email
+        • Donderdag 14 maart 2024 09:56, email
+        • Donderdag 14 maart 2024 09:57, email
+        • Donderdag 14 maart 2024 09:59, email
+        • Donderdag 14 maart 2024 12:51, email
+        • Donderdag 14 maart 2024 12:52, email
+        • Donderdag 14 maart 2024 12:55, email
+        • Donderdag 14 maart 2024 17:58, email
+        • Donderdag 14 maart 2024 18:00, email
+        • Donderdag 4 maart 2024 18:01, email
+        • Maandag 18 maart 2024 11:17, email
+        • Dinsdag 19 maart 2024 12:10, email
+        • Dinsdag 19 maart 2024 12:26, email
+        • Woensdag 20 maart 2024 08:11, email
+        • Woensdag 20 maart 2024 08:16, email
+        • Woensdag 20 maart 2024 08:40, klachtformulier via website
+        • Woensdag 20 maart 2024 09:10, klachtformulier via website
+        • Woensdag 20 maart 2024 09:15, klachtformulier via website
+        • Woensdag 20 maart 2024 14:47, email
+        • Maandag 1 april 2024 14:32, klachtformulier via website
+        • Maandag 1 april 2024 14:34, klachtformulier via website
+        • Dinsdag 2 april 2024 20:31, email
+        • Dinsdag 2 april 2024 20:52, email
+        • Woensdag 3 april 2024 17:37, email
+        • Zondag 7 april 2024 11:23, klachtformulier via website
+        • Zondag 7 april 2024 11:30, klachtformulier via website
+        • Zondag 7 april 2024 11:30, klachtformulier via website
+        • Zondag 7 april 2024 11:37, klachtformulier via website
+        • Zondag 7 april 2024 11:41, klachtformulier via website
+        • Zondag 7 april 2024 11:53, klachtformulier via website
+        • Zondag 7 april 2024 11:59, klachtformulier via website
+        • Zondag 7 april 2024 12:01, email
+        • Zondag 7 april 2024 12:02, email
+        • Zondag 7 april 2024 12:02, email
+        • Zondag 7 april 2024 12:03, email
+        • Zondag 7 april 2024 12:04, email
+        • Zondag 7 april 2024 12:04, email
+        • Zondag 7 april 2024 12:19, klachtformulier via website
+        • Zondag 7 april 2024 12:21, email
+        • Dinsdag 9 april 2024 10:49, klachtformulier via website
+        • Woensdag 10 april 2024 11:43, klachtformulier via website
+        • Woensdag 10 april 2024 11:47, email
+        • Woensdag 10 april 2024 11:49, email
+
+        Uit de inhoud van bovenstaande berichten maken wij op dat uw vragen in principe allemaal betrekking hebben op de
+        voortgang en status inzake de door uw financieel adviseur ingediende klacht op 9 november 2023.
+        Wij kunnen u informeren dan wij heden een inhoudelijke reactie aan uw financieel adviseur hebben verzonden.
+
+        Wij zullen de nadere correspondentie over de klacht met uw financieel adviseur voortzetten. Zodoende zullen wij
+        geen verdere inhoudelijke opvolging geven aan bovenvermelde emailberichten of klachtformulieren.
+
+        Wij vertrouwen erop u hiermee voldoende te hebben geïnformeerd.
+
+        Met vriendelijke groet,
+        Namens Merius Hypotheken, afdeling Klachtafhandeling
+    </dialog>
+
+    <dialog id="mail-07-05-2024">
+        Geachte heer X.
+
+        In antwoord op uw mail d.d. 12 april 2024 waarin u schrijft "Wij vertrouwen erop u hiermee voldoende te hebben
+        geïnformeerd" wil ik u mededelen dat ik niet voldoende geïnformeerd ben.
+        U schrijft "Uit de inhoud van bovenstaande berichten maken wij op dat uw vragen in principe allemaal betrekking
+        hebben op de voortgang en status inzake de door uw financieel adviseur ingediende klacht op 9 november 2023",
+        echter het merendeel van deze klachten heeft betrekking op:
+        het slecht functioneren van uw afdeling klachten afhandeling
+        het meermaals overschrijden van door deze afdeling zelf beloofde behandelingstermijnen van onze klacht
+        het meermaals overschrijden van deze termijnen zonder de door deze afdeling beloofde tijdige melding van deze
+        overschrijding
+        het niet reageren door de afdeling op door ons gestelde vragen m.b.t. deze overschrijdingen
+        het niet reageren door deze afdeling op door ons gedane terugbelverzoeken
+
+        Ik verwacht daarom dat u deze mails nogmaals doorneemt en van een inhoudelijke behandeling en antwoord voorzien
+        aan mij en mijn financieel vertegenwoordigers retourneert.
+
+        Mochten wij niet binnen 14 (werk) dagen (uiterlijk 29 mei 2024) een reactie van u ontvangen hebben, dan zal dit
+        dossier worden meegenomen in de klachtenmelding richting het Kifid. Een inhoudelijke reactie van onze kant, op
+        het schrijven van 8 april 2024 van de heer X. is reeds naar u verzonden.
+
+    </dialog>
+
+    <dialog id="mail-1-12-04-2024">
+        Beoordeling van uw klacht
+
+        Wij hebben uw klacht onderzocht en besproken met de betrokken medewerkers. Helaas is het niet mogelijk om uw
+        klacht op te lossen. In artikel 6.10 van onze algemene voorwaarden 2019 staat in de voorwaarden van de
+        verhuisregeling vermeld:
+
+        - U kunt de verhuisregeling gebruiken als u een nieuwe woning wilt kopen, uw huidige woning verkocht is en uw
+        aanvraag voldoet aan de voorwaarden van Merius.
+
+        De belangrijkste voorwaarden van de verhuisregeling zijn;
+        - De tijd tussen de aflossing van de oude lening en het aangaan van de nieuwe lening is niet meer dan 6 maanden
+        - De aanvraag voor de verhuisregeling wordt gedaan minstens 1 maand voordat de oude woning is geleverd
+        - De oude woning is verkocht en de ontbindende voorwaarden zijn verstreken. De verkoopovereenkomst is hiervoor
+        het bewijs.
+
+        Op het moment van de aanvraag (10 februari 2023) was niet voldaan aan de voorwaarden: de verkoop van de oude
+        woning was nog niet definitief (ontbindende voorwaarden tot en met 21 april 2023). Om die reden kon er geen
+        gebruik worden gemaakt van de verhuisregeling op het moment van de aanvraag.
+        Daarnaast is het bij de aanvraag niet duidelijk geweest dat u gebruik wenste te maken van de verhuisregeling,
+        maar dat de aanvraag van 10 februari 2023 als een nieuwe aanvraag moest worden beschouwd. Zo geeft u ook aan in
+        uw klacht. In uw mail d.d. 3 augustus geeft u ook te kennen dat u in de veronderstelling was dat de
+        verhuisregeling achteraf kon worden aangevraagd zoals andere geldverstrekkers dat doen, en niet enkel op het
+        moment van de aanvraag. Wij betreuren dat hierover onduidelijkheid is ontstaan, maar wij kunnen geen
+        verantwoordelijkheid nemen voor de werkwijze van andere partijen.
+        In uw klacht geeft verder u aan dat u contact heeft gehad met Merius voorafgaand aan de aanvraag van de offerte
+        op 10 februari 2023. U stelt dat u toen is medegedeeld dat de nieuwe hypotheek als nieuwe aanvraag moest worden
+        ingediend. Het omzetten en gebruik maken van de verhuisregeling kon dan later nog, is er volgens u toen
+        aangegeven.
+        Helaas hebben wij geen mail verkeer of telefoongesprekken geadministreerd bij deze aanvraag waarin dit aan u zou
+        zijn bevestigd. Om die reden kunnen wij ook niet achterhalen of u mogelijk verkeerde informatie heeft ontvangen
+        en of Merius een verwijt te maken is in uw stelling dat de heer Meer Stress Met Merius is benadeeld. Merius is
+        bekend dat zij een
+        verhuisregeling aanbiedt die beperkt is in de mogelijkheden. Om die reden is het dan ook beleid dat een aanvraag
+        voor met een verhuisregeling vanaf de eerste offerte duidelijk moet zijn benoemd en beoordeeld. Wij merken op
+        dat - mocht u over schriftelijke en/of telefonische onderbouwing beschikken - Merius bereid is om zijn standpunt
+        op dit punt te heroverwegen.
+
+        Tot slot willen wij u informeren dat we uiteraard meedenken voor mogelijke oplossingen in het belang van
+        klanten. Tegelijkertijd zijn onze productvoorwaarden met zorg vastgesteld en kunnen wij niet zonder meer
+        afwijken van de overeengekomen voorwaarden.
+
+        Voor de situatie van de heer Meer Stress Met Merius betekent dit echter dat wij geen aanpassing kunnen
+        doorvoeren in de huidige
+        leningsafspraken.
+
+        Samenvatting
+
+        Wij betreuren de situatie die is ontstaan en dat wij u de gevraagde verhuisregeling niet kunnen aanbieden. Zoals
+        we eerder al hebben benoemd voldoet de aanvraag niet aan de voorwaarden van de verhuisregeling: uw oude woning
+        was nog niet verkocht en de ontbindende voorwaarden waren nog niet verstreken ten tijde van de aanvraag. Wij
+        kunnen dan ook geen medewerking verlenen om de uitzondering te maken op de algemene voorwaarden en de huidige
+        leningsafspraken te wijzigen.
+
+        Wij vinden het vervelend dat wij uw klacht niet kunnen oplossen.
+
+        Mocht u nog vragen of opmerkingen hebben, dan horen wij dat graag.
+    </dialog>
+
+    <dialog id="mail-06-05-2024">
+        Geachte mevrouw Y.,<br><br>
+        Hedenmorgen hebben we uw mail ontvLangs deze weg willen wij reageren op uw brief van 8 april 2024, welke wij op
+        12 april 2024 ( tijdstip 15.54 uur ) via de mail ontvingen.
+        Allereerst vinden wij het vreemd dat de brief is gedateerd op 08 april en ook is ondertekend, maar wij deze
+        brief pas op 12 april van u mogen ontvangen.
+        Tevens hebben wij, zoals door u is aangegeven in deze mail, de separate mail met de bijlage(n) niet ontvangen.
+        Op 24 januari 2024 heeft u onze klacht, welke wij al op 09 november 2023 aan u hadden verzonden ( maar deze werd
+        niet-ontvankelijk verklaard ), pas op op 26 januari 2024 in behandeling genomen. De behandelaar van dit dossier
+        was mevrouw X. In haar ontvangstbevestiging gaf ze aan te verwachten de klacht uiterlijk
+        binnen 21 dagen te kunnen beoordelen, indien deze termijn niet haalbaar was dan zou zij dit tijdig aangeven. Op
+        21 februari 2024 hebben wij haar een mail verzonden dat wij tot dat moment totaal geen reactie hadden ontvangen,
+        ook geen verlenging van deze termijn.
+        Op 29 februari 2024 ontvingen wij daarop haar reactie waarin zij aangaf deze termijn te willen verlengen met 14
+        dagen. Om duidelijk te krijgen hebben wij gereageerd, middels een mail, of zij kon aangeven of dit werkdagen
+        waren of 'normale' 14 dagen. Deze mail hebben wij op, 5 maart 2024, aan haar verzonden. U raadt het al, wij
+        hebben hier geen reactie op mogen ontvangen.
+        Nadat ook deze 'normale' 14 dagen en eveneens de 14 werkdagen waren verstreken is de heer Meer Stress Met Merius
+        zelf ook gaan
+        bellen en mailen met Merius over de status van dit dossier.
+        Er kwam namelijk geen enkele reactie van Merius.
+        Op dinsdag 26 maart werd de heer Meer Stress Met Merius gebeld door mevrouw X. en ik heb haar dezelfde dag
+        eveneens
+        gesproken. Zij gaf aan het dossier te hebben overgenomen van mevrouw X. Zij vermeldde dat zij alle
+        gegevens nog niet, betreffende de gehele (voor)geschiedenis. Dezelfde dag heb ik haar een mail gestuurd met
+        daarbij alle correspondentie tot dat moment. Afgesproken was dat dit zo spoedig zo worden opgepakt en
+        afgehandeld.
+        Helaas duurde het 17 dagen voordat wij een inhoudelijke reactie, op onze klacht, mochten ontvangen. In
+        totaliteit heeft de heer Meer Stress Met Merius (en wij) 79 dagen mochten wachten! Gelet op het eerder vermelde
+        hadden wij veel
+        eerder een inhoudelijke reactie verwacht.
+        De eerste keer dat wij contact, met Merius, hebben opgenomen was tussen 20 januari 2023 (het moment waarop de
+        heer Meer Stress Met Merius zijn handtekening heeft geplaatst op de voorlopige koopovereenkomst) en 10 februari
+        2023 (de datum van
+        het aanvragen van zijn de nieuwe hypotheek).
+        Wij belden omdat de heer Meer Stress Met Merius en zijn ex partner een geschil hadden over wie van de
+        verhuisregeling gebruik
+        mocht gaan maken. Wij hebben dit destijds besproken en kregen als reactie te horen dat het in deze fase van de
+        scheiding, waarbij er nog geen overeenstemming was tussen beide partijen en de huidige woning nog niet
+        definitief was verkocht, er geen hypotheek met een zogenaamde verhuisregeling konden aanvragen.
+        Mochten wij dit wel doen, dan zou de aanvraag worden afgewezen i.v.m. de eerder genoemde reden. De
+        verhuisregeling zou in een later stadium toegepast kunnen worden.
+        Op 10 februari 2023 is besloten de (nieuwe) hypotheek, zonder verhuisregeling aan te vragen, omdat de
+        ontbindende voorwaarden, voor de heer Meer Stress Met Merius, op 3 maart 2023 zouden gaan verlopen. Merius had
+        op dat moment (erg)
+        lange doorlooptijden (tijdsdruk). Besloten werd om de hypotheek bij Merius aan te vragen (vanwege de
+        verhuisregeling) dit terwijl de actuele rentestanden veel hoger waren dan bij andere hypotheekverstrekkers
+        (bijvoorbeeld Centraal Beheer, d.d. 10 februari 2023, 3,8% met een rentevastperiode van 10 jaar). De
+        verhuisregeling zou later worden toegepast, zodat de rente veel lager was dan de huidige (10 februari 2023)i
+        marktrente. Wij nemen aan dat u begrijpt dat als de verhuisregeling niet zou worden toegepast, de heer Meer
+        Stress Met Merius
+        nooit voor Merius (en haar rente) zou kiezen!
+        Het rentevoorstel werd ontvangen en deze is, met alle aan te leveren stukken en handtekeningen, doorgestuurd
+        naar Merius. Helaas kon Merius het dossier niet voor 3 maart 2023 (datum ontbindende voorwaarden) beoordelen. Om
+        heer Meer Stress Met Merius niet in problemen te laten komen is de datum van de ontbindende voorwaarden verlengd
+        naar 17 maart
+        2023.
+        Op 3 maart 2023 ontving de heer Meer Stress Met Merius een bevestiging van zijn ex partner, dat hij de lopende
+        hypotheek mee mocht
+        nemen en dus gebruik kon maken van de verhuisregeling.
+        Wij hebben direct contact opgenomen met Merius om dit door te geven. Mocht de heer Meer Stress Met Merius op dat
+        moment gebruik
+        willen maken van de verhuisregeling, dan zou het in aanvraag zijnde rentevoorstel gelijk komen te vervallen en
+        zou deze dus NIET finaal beoordeeld worden door Merius. Er zou op dat moment een nieuwe aanvraag ingediend
+        moeten worden waarin aangegeven werd dat, de heer Meer Stress Met Merius, gebruik wilde maken van de
+        verhuisregeling. Helaas was
+        dat geen optie aangezien de ontbindende voorwaarden voor de aankoop op 17 maart 2023 zou verlopen en Merius
+        telefonisch aan had gegeven de nieuwe aanvraag nooit voor 17 maart finaal akkoord zou krijgen. Tevens was, op
+        dat moment, de huidige woning (Knibbelakker te Epe) ook nog niet verkocht. De verkoopovereenkomst (Knibbelakker
+        te Epe) is getekend op 16 maart 2023 en de ontbindende voorwaarden van deze overeenkomst waren gesteld op 21
+        april 2023. Merius heeft toen aangegeven dat het beste was dat de aanvraag finaal zou worden beoordeeld om er
+        zeker van te zijn dat hij de nieuwe woning kon aankopen. Achteraf, na het passeren en de verkoop van de huidige
+        woning, zou dit kunnen worden aangepast.
+        Wat Merius NIET heeft vermeld is dat vanaf de datum van het verstrijken van de ontbindende voorwaarden (verkoop
+        Knibbelakker ), zijnde 21 april 2023, er een nieuwe aanvraag had moeten worden ingezonden met het verzoek
+        gebruik te willen maken van de verhuisregeling. Vanaf 21 april 2023 was dit namelijk WEL mogelijk.
+        Wij zijn, in deze, foutief en onvolledig voorgelicht!
+        Wanneer de heer Meer Stress Met Merius of wij telefonisch contact zoeken met Merius, dan wordt er aangegeven dat
+        de
+        telefoongesprekken worden opgenomen voor trainingsdoeleinden. Het moet voor Merius dus een kleine moeite zijn om
+        alle telefonische contacten die de heer Meer Stress Met Merius en/of wij hebben gehad te achterhalen en terug te
+        beluisteren. Er
+        zijn, in de periode vanaf 20 januari 2023 t/m heden, diverse telefonische contacten geweest. De telefoonnummers
+        die wij hebben gebeld zijn de volgende nummers: 088-2056466 en 088-2056460.
+        De heer Meer Stress Met Merius was bij het afsluiten van zijn 1e hypotheek (bij Merius) in 2018/2019 erg blij
+        met de service van
+        Merius. Helaas is dit helemaal omgeslagen, vanwege het ontbreken van een normale communicatie en het niet
+        nakomen van diverse afsoraken. Als hij alles van tevoren geweten had, dan had hij de hypotheek zeker niet via
+        Merius laten lopen.
+        Alles bij elkaar zijn de heer Meer Stress Met Merius en wij erg teleurgesteld in Merius en de communicatie met
+        hen. De informatie,
+        zoals wij deze van Merius hebben ontvangen, gedurende de aanvraagperiode van de nieuwe hypotheek was niet
+        compleet en 'misleidend'. Tevens was de afwikkeling van de klacht erg amateuristisch. De door Merius gestelde
+        termijnen zijn nooit nagekomen. Merius reageerde alleen wanneer wij hen belde of een mail stuurden.
+        De heer Meer Stress Met Merius had tevens nog een 2e klacht ingediend over de afwikkeling van de klacht. Op zijn
+        'Merius' is daar
+        door u op gereageerd. Een retourmail op 12 april 2024: 'er zullen verder geen inhoudelijke opvolgen gaan
+        plaatsvinden en Merius gaat ervan uit dat deze klacht daarmee afgewikkeld is. De 2e klacht was over de trage
+        afwikkeling en de gebrekkige communicatie over de ingediende klacht van 24 januari 2024! In uw schrijven stelt u
+        'te willen meedenken' over een mogelijke oplossing voor de heer Meer Stress Met Merius. Wij missen in uw brief
+        het “meedenken”
+        richting de heer Meer Stress Met Merius. Kunt u mij aangeven waarin u heeft meegedacht om de klacht van de heer
+        Meer Stress Met Merius op te lossen?
+        Wij zien het niet.
+        Middels deze brief willen wij Merius de mogelijkheid/handreiking bieden om met een passende oplossing te komen
+        voor het ontstane probleem. Mochten wij binnen een termijn van 14 (werk)dagen, na dagtekening van deze brief (06
+        mei 2024), niets van Merius hebben vernomen dan zal het gehele dossier worden overgedragen aan het Kifid.
+        In afwachting van uw bericht.
+        angen, waarin wordt aangegeven dat het voor Merius niet mogelijk is de
+        klacht binnen de gestelde termijn van 21 dagen, rekenend vanaf 26 januari 2024 (de datum van uw
+        ontvangstbevestiging) te behandelen. Afgelopen dinsdag, 27 februari 2024, was deze termijn reeds verstreken.
+        In de correspondentie van 26 januari 2024 wordt aangegeven, dat wanneer de verwerkingstijd van 21 dagen
+        (werkdagen?) niet wordt gehaald er tijdig bericht zou worden verzonden.
+        Kunt u aangeven, waarom wij niet tijdig op de hoogte zijn gesteld dat deze periode van 21 dagen niet
+        haalbaar was voor Merius, zodat wij onze relatie, de heer Meer Stress Met Merius, hiervan op de hoogte kunnen
+        stellen.
+    </dialog>
+
+    <dialog id="mail-31-05-2024">
+        Geachte mevrouw Y.,<br><br>
+        Bij deze wil ik een klacht indienen over de afdeling klachtenafhandeling bij uw firma
+        6 Mei jongstleden hebben mijn financieel vertegenwoordiger en ik meerdere klachten ingediend bij uw afdeling
+        klachtenafhandeling.
+        Tot op heden hebben wij nog geen enkele reactie mogen ontvangen, zelfs geen ontvangstbevestiging (terwijl wij
+        daar zelfs schriftelijk om hadden verzocht), hetgeen niet de eerste keer is, daar wij in het voortraject van
+        deze klachten ook meermaals geen reactie kregen op onze vragen, terugbelverzoeken en uiteindelijk officieel
+        ingediende klachten.
+        Over goed 14 dagen gedenken wij het trieste feit dat wij reeds een jaar bezig zijn met deze procedure.
+        Wij hebben het gevoel niet serieus genomen te worden en zijn zeer teleurgesteld in de werkwijze van deze
+        afdeling, die als een struisvogel de kop in het zand steekt op het moment dat zij persoonlijk aangesproken
+        worden op hun functioneren en niets van zich laat horen.
+        Ik denk dat het tijd wordt dat u uw reclame slogans gaat aanpassen, mijn voorstellen daarvoor zijn als volgt
+        "meer stress met Merius" dat allitereert beter en
+        "Merius Hypotheken: de hypotheek waar je niet blij van wordt" hetgeen beter aansluit bij de werkelijkheid zoals
+        ik die nu meemaak.
+        Mijn financieel vertegenwoordigers en ik wachten nog steeds op een antwoord op onze klachten en vragen.
+        Wij beraden ons op te nemen vervolgstappen richting KIFID en de diverse consumentenorganisaties zoals KASSA,
+        BELBUS, RADAR,
+        MAX MELDPUNT en een ieder die wel serieus naar onze klacht wil luisteren.
+        De bal ligt niet alleen meer in uw hoek, maar zal door ons naar meerdere partijen doorgespeeld worden.
+
+        Een zeer gefrustreerde klant
+        Meer Stress Met Merius
+    </dialog>
+
+    <dialog id="mail-04-06-2024">
+        Geachte mevrouw Y.,<br><br>
+        Hedenmorgen heb ik om 11:00 uur contact gehad met mevr. Z. van uw klantenservice m.b.t. het niet reageren van
+        uw klachtenafdeling op een terugbelverzoek dat ik vrijdagmorgen 31-05-2024 om 11:00 had gedaan en diezelfde
+        middag om 16:45 uur nogmaals met klem herhaald had, omdat wij nog niets gehoord hadden.
+        Vandaag om 11:00 uur waren er 2 volle werkdagen verstreken zonder dat wij gebeld waren.
+        Nadat zij mijn klacht aangehoord had, heeft mevr. Z. contact opgenomen met mevr. Y. van de
+        klachtenafdeling, die haar beloofde vandaag een mail met een belafspraak aan ons te doen toekomen. Zo vertelde
+        mevr. Z. mij.
+        Hedenavond om 18:00 uur hadden ik , nog mijn financieel vertegenwoordiger de beloofde mail ontvangen!
+        Ergo de zoveelste loze belofte van de klachtenafdeling!!!
+        Wanneer worden wij serieus genomen en komt deze afdeling zijn beloftes na, of interpreteren wij de naam van deze
+        afdeling verkeerd en is het niet de afdeling die klachten oplost maar juist klachten genereerd.
+
+        Een zeer ontevreden klant
+        Meer Stress Met Merius
+
+        Mail 05 - 06 - 2024
+
+        Geachte Financieel adviseur,
+
+        N.a.v. telefonisch contact tussen de heer Meer Stress Met Merius en onze afdeling Klantenservice, nemen we deze
+        week telefonisch
+        contact met u op.
+        Normaliter maakt dit geen onderdeel uit van onze werkwijze. Klachtenafhandeling vindt uitsluitend
+        schriftelijk/per email plaats - conform klachtenprocedure.
+        U zal gebeld worden door de heer X.
+
+    </dialog>
+
+    <dialog id="mail-13-06-2024">
+
+        Geachte heer Meer Stress Met Merius, Op vrijdag 31 mei 2024 heeft u een klacht ingediend via het
+        klachtenformulier op de website
+        van Merius Hypotheken. Met deze brief bevestigen wij ontvangst van uw klacht. In uw klacht geeft u aan zich niet
+        serieus te voelen genomen en u bent teleurgesteld in de afhandeling van uw eerdere klacht die u heeft ingediend
+        via uw adviseur. Wij danken u voor het aan de orde brengen van uw klacht: wij zullen de werkzaamheden van de
+        klachtafdeling verder analyseren.
+
+        Tegelijkertijd moeten wij u informeren dat klachten over de klachtenafdeling niet relateren onder een product of
+        dienst van Merius Hypotheken waarover klachten kunnen worden ingediend. Wij verklaren uw klacht dan ook
+        niet-ontvankelijk en deze wordt ook niet verder afgehandeld conform de klachtenprocedure (zie bijlage).
+
+        Voor de goede orde merken wij op dat de afhandeling van uw klacht langer duurt dan aanvankelijk was voorzien.
+        Wij werken hard om achterstanden in te halen om u en uw adviseur van een reactie te kunnen voorzien. De brief
+        welke uw adviseur op 6 mei jl. heeft verstuurd, hebben wij in behandeling en daarover zullen wij spoedig contact
+        opnemen met uw adviseur.
+
+
+    </dialog>
+
+    <dialog id="mail-24-06-2024">
+        Geachte mevrouw Y.,<br><br>
+        18 dagen geleden beloofde uw hr. X. om ons, na het verzenden van een mail, te bellen om te verifiëren of de
+        bewuste mail goed ontvangen was. Wij wachten nog steeds op het door hem persoonlijk met nadruk beloofde
+        telefoontje.
+        Vrijdag 14 -06 heb ik 2 terugbelverzoeken gedaan aan uw directie
+        ( 1 via een klachtenformulier en 1 via de afdeling klantenservice ) om de gang van zaken te bespreken, maar
+        helaas ook van die kant tot op de dag van vandaag geen reactie gekregen.
+        Tevens heb ik nog steeds geen antwoord op mijn vragen over waar en bij wie ik serieus kan klagen over het
+        functioneren van de afdeling klachtenafhandeling, daar deze afdeling nog steeds geen gehoor geeft aan onze
+        klachten, vragen en terugbelverzoeken.
+
+    </dialog>
+
+    <dialog id="c">
+
+    </dialog>
+
+    <dialog id="b">
+
+    </dialog>
+
+    <dialog id="a">
+
+    </dialog>
+
+    <div class="card-box">
+        <div class="mail mail-left" data-mail-id="mail-13-02-2024">
+            13 februari 2024<br>
+            Klacht over overschrijden beantwoordingstermijn klachtenprocedure.
+        </div>
+        <div class="clear-fix"></div>
+        <div class="mail mail-right" data-mail-id="mail-20-03-2024">
+            20 maart 2024<br>
+            Klacht over overschrijden 2e beantwoordingstermijn klachtenprocedure
+        </div>
+        <div class="clear-fix"></div>
+        <div class="mail mail-left" data-mail-id="mail-1-20-03-2024">
+            20 maart 2024<br>
+            Bij wie kan ik klagen over de slecht functionerende klachten afdeling + antwoord daarop + ontkenning op 13
+            juni 2024
+        </div>
+        <div class="clear-fix"></div>
+        <div class="mail mail-right" data-mail-id="mail-01-04-2024">
+            01 april 2024<br>
+            Officiele klacht over de slecht functionerende klachtenafdeling
+        </div>
+        <div class="clear-fix"></div>
+        <div class="mail mail-left" data-mail-id="mail-12-04-2024">
+            12 april 2024<br>
+            Hoe veel mails moet je sturen om niet gehoord te worden
+        </div>
+        <div class="clear-fix"></div>
+        <div class="mail mail-right" data-mail-id="mail-07-05-2024">
+            07 mei 2023<br>
+            Antwoord op negeren klachten
+        </div>
+        <div class="clear-fix"></div>
+        <div class="mail mail-left" data-mail-id="mail-1-12-04-2024">
+            12 april 2024<br>
+            klachtenbeoordeling door Merius
+        </div>
+        <div class="clear-fix"></div>
+        <div class="mail mail-right" data-mail-id="mail-06-05-2024">
+            06 mei 2024<br>
+            Repost van mijn financieel vertegenwoordiger
+        </div>
+        <div class="clear-fix"></div>
+        <div class="mail mail-left" data-mail-id="mail-31-05-2024">
+            31 mei 2024<br>
+            Hernieuwde klacht over klachtenafdeling + aankondiging acties richting RADAR KASSA E.D.
+        </div>
+        <div class="clear-fix"></div>
+        <div class="mail mail-right" data-mail-id="mail-04-06-2024">
+            04 juni 2024<br>
+            Nog meer loze beloftes
+        </div>
+        <div class="clear-fix"></div>
+        <div class="mail mail-left" data-mail-id="mail-13-06-2024">
+            13 juni 2024<br>
+            Je kunt blijkbaar niet klagen over het slecht functioneren van de klachtenafdeling
+        </div>
+        <div class="clear-fix"></div>
+        <div class="mail mail-right" data-mail-id="mail-24-06-2024">
+            24 juni 2024<br>
+            zelfs een interimmanager houd zich niet aan zijn beloftes
+        </div>
+        <div class="clear-fix"></div>
+    </div>
+
+
+    <script>
+        const yearsSince2019 = document.getElementById('years-since-2019');
+        if (yearsSince2019 !== null) {
+            const now = new Date();
+            yearsSince2019.textContent = (now.getFullYear() - 2019).toString();
+
+            const fullYears = now.getFullYear() - 2024;
+            const fullMonth = now.getMonth();
+
+            const monthsSinceJune2023 = document.getElementById('months-since-june-2023');
+            monthsSinceJune2023.textContent = (6 + fullMonth + fullYears * 12).toString();
+        }
+        const modalRef = { modal: null };
+
+        const cardBox = [...document.getElementsByClassName('card-box')][0];
+        cardBox.addEventListener("click", (event) => {
+            const { target } = event;
+            if (!(target instanceof HTMLElement)) return;
+            const mail = target.closest(".mail");
+            if (!(mail instanceof HTMLElement)) return;
+            const mailId = mail.dataset.mailId;
+            if (mailId === undefined) return;
+            const dialog = document.getElementById(mailId);
+            if (!(dialog instanceof HTMLDialogElement)) return;
+            modalRef.modal?.close();
+            modalRef.modal = dialog;
+            setTimeout(() => dialog.show());
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.keyCode === 27) {
+                modalRef.modal?.close();
+            }
+        });
+
+        document.addEventListener("click", () => {
+            modalRef.modal?.close();
+        })
+    </script>
+</body>
+
+</html>
