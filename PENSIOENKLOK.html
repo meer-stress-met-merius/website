@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown to 2029</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, #1e1f72 0%, #2e2a98 50%, #413db3 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(36, 35, 117, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+            animation: shimmer 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes shimmer {
+            0% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+        }
+
+        .title {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 900;
+            color: #ef0909;
+            margin-bottom: 3rem;
+            letter-spacing: 0.1em;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: clamp(1rem, 4vw, 3rem);
+            flex-wrap: wrap;
+        }
+
+        .time-unit {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(232, 244, 248, 0.3);
+            border-radius: 20px;
+            padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
+            min-width: clamp(120px, 15vw, 200px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .time-unit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .time-unit:hover::before {
+            left: 100%;
+        }
+
+        .time-unit:hover {
+            transform: translateY(-10px);
+            border-color: rgba(232, 244, 248, 0.6);
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(232, 244, 248, 0.2);
+        }
+
+        .number {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            color: #e8f4f8;
+            display: block;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .label {
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            color: #b8d4e3;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        .subtitle {
+            margin-top: 3rem;
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            color: #ef0909;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .countdown {
+                gap: 1rem;
+            }
+
+            .time-unit {
+                min-width: 100px;
+                padding: 1.5rem 1rem;
+            }
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(232, 244, 248, 0.6);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        .floating-element:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            left: 20%;
+            animation-delay: 2s;
+        }
+
+        .floating-element:nth-child(3) {
+            left: 30%;
+            animation-delay: 4s;
+        }
+
+        .floating-element:nth-child(4) {
+            left: 40%;
+            animation-delay: 6s;
+        }
+
+        .floating-element:nth-child(5) {
+            left: 50%;
+            animation-delay: 8s;
+        }
+
+        .floating-element:nth-child(6) {
+            left: 60%;
+            animation-delay: 10s;
+        }
+
+        .floating-element:nth-child(7) {
+            left: 70%;
+            animation-delay: 12s;
+        }
+
+        .floating-element:nth-child(8) {
+            left: 80%;
+            animation-delay: 14s;
+        }
+
+        .floating-element:nth-child(9) {
+            left: 90%;
+            animation-delay: 16s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+
+    <div class="container">
+        <h1 class="title">PENSIOEN DATUM COUNTDOWN</h1>
+        <div class="countdown">
+            <div class="time-unit">
+                <span class="number" id="years">0</span>
+                <span class="label">Years</span>
+            </div>
+            <div class="time-unit">
+                <span class="number" id="months">0</span>
+                <span class="label">Months</span>
+            </div>
+            <div class="time-unit">
+                <span class="number" id="days">0</span>
+                <span class="label">Days</span>
+            </div>
+            <div class="time-unit">
+                <span class="number" id="hours">0</span>
+                <span class="label">Hours</span>
+            </div>
+            <div class="time-unit">
+                <span class="number" id="minutes">0</span>
+                <span class="label">Minutes</span>
+            </div>
+        </div>
+        <p class="subtitle">Until January 29, 2029</p>
+    </div>
+
+    <script>
+        function updateCountdown() {
+            const targetDate = new Date('Mon Jan 29 2029 00:00:00 GMT+0200');
+            const now = new Date();
+            const difference = targetDate - now;
+            const {days, hours, minutes, months, years} = getPreciseTimeDifference(now, targetDate);
+            if (difference > 0) {
+                animateNumber('years', years);
+                animateNumber('months', months);
+                animateNumber('days', days);
+                animateNumber('hours', hours);
+                animateNumber('minutes', minutes);
+            } else {
+                // Target date has passed
+                document.getElementById('years').textContent = '0';
+                document.getElementById('months').textContent = '0';
+                document.getElementById('days').textContent = '0';
+                document.getElementById('hours').textContent = '0';
+                document.getElementById('minutes').textContent = '0';
+            }
+        }
+
+        function animateNumber(elementId, newValue) {
+            const element = document.getElementById(elementId);
+            const currentValue = parseInt(element.textContent) || 0;
+
+            if (currentValue !== newValue) {
+                element.style.transform = 'scale(1.1)';
+                element.style.transition = 'transform 0.3s ease';
+
+                setTimeout(() => {
+                    element.textContent = newValue;
+                    element.style.transform = 'scale(1)';
+                }, 150);
+            }
+        }
+
+        function getPreciseTimeDifference(date1, date2) {
+            // Ensure date1 is always the earlier date for simpler logic
+            const startDate = new Date(Math.min(date1.getTime(), date2.getTime()));
+            const endDate = new Date(Math.max(date1.getTime(), date2.getTime()));
+
+            let years = 0;
+            let months = 0;
+            let days = 0;
+            let hours = 0;
+            let minutes = 0;
+
+            // 1. Calculate Minutes and Hours exactly from the raw millisecond difference
+            const diffMillis = endDate.getTime() - startDate.getTime();
+            minutes = Math.floor(diffMillis / (1000 * 60));
+            hours = Math.floor(minutes / 60);
+
+            minutes = minutes % 60; // Remaining minutes
+            hours = hours % 24;     // Remaining hours after full days
+
+            // 2. Calculate Years, Months, and Days by iterating and adjusting
+            let current = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), startDate.getHours(), startDate.getMinutes());
+            let tempEndDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), endDate.getHours(), endDate.getMinutes());
+
+
+            // Adjust current date to only consider up to the hour for calendar calculation
+            // We've already taken care of the exact minutes and hours difference above
+            current.setHours(0, 0, 0, 0);
+            tempEndDate.setHours(0, 0, 0, 0);
+
+
+            // Calculate years
+            while (current.getFullYear() < tempEndDate.getFullYear() ||
+                (current.getFullYear() === tempEndDate.getFullYear() && (current.getMonth() < tempEndDate.getMonth() ||
+                    (current.getMonth() === tempEndDate.getMonth() && current.getDate() <= tempEndDate.getDate())))) {
+
+                let nextYear = new Date(current.getFullYear() + 1, current.getMonth(), current.getDate());
+
+                // Handle end of month issues for next year (e.g., Feb 29 -> March 1)
+                // If nextYear's month or date changes due to month end (e.g. Jan 31 -> Feb 31 -> Mar 2), it's not a full year
+                if (nextYear.getMonth() !== current.getMonth() || nextYear.getDate() !== current.getDate()) {
+                    nextYear = new Date(current.getFullYear() + 1, current.getMonth() + 1, 0); // Last day of that month next year
+                }
+
+
+                if (nextYear.getTime() <= tempEndDate.getTime()) {
+                    years++;
+                    current.setFullYear(current.getFullYear() + 1);
+                } else {
+                    break;
+                }
+            }
+
+            // Calculate months
+            while (current.getFullYear() < tempEndDate.getFullYear() ||
+                (current.getFullYear() === tempEndDate.getFullYear() && (current.getMonth() < tempEndDate.getMonth() ||
+                    (current.getMonth() === tempEndDate.getMonth() && current.getDate() <= tempEndDate.getDate())))) {
+
+                let nextMonth = new Date(current.getFullYear(), current.getMonth() + 1, current.getDate());
+
+                // Handle end of month issues (e.g., Jan 31 -> Feb 31 should be Feb 28/29)
+                if (nextMonth.getMonth() !== (current.getMonth() + 1) % 12 || nextMonth.getFullYear() !== current.getFullYear() + Math.floor((current.getMonth() + 1) / 12)) {
+                    nextMonth = new Date(current.getFullYear(), current.getMonth() + 1, 0); // Last day of the next month
+                }
+
+                if (nextMonth.getTime() <= tempEndDate.getTime()) {
+                    months++;
+                    current.setMonth(current.getMonth() + 1);
+                } else {
+                    break;
+                }
+            }
+
+
+            // Calculate days
+            // At this point, current is almost endDate, just need to count days
+            while (current.getTime() <= tempEndDate.getTime() - (1000 * 60 * 60 * 24)) { // Ensure we don't count partial days
+                days++;
+                current.setDate(current.getDate() + 1);
+            }
+
+
+            return {
+                years: years,
+                months: months,
+                days: days,
+                hours: hours,
+                minutes: minutes,
+            };
+        }
+
+        // Update countdown immediately and then every second
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+
+</html>
