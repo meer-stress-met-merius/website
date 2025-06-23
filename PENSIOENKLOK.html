@@ -260,10 +260,6 @@
                 <span class="number" id="hours">0</span>
                 <span class="label">Hours</span>
             </div>
-            <div class="time-unit">
-                <span class="number" id="minutes">0</span>
-                <span class="label">Minutes</span>
-            </div>
         </div>
         <p class="subtitle">Until January 29, 2029</p>
     </div>
@@ -273,20 +269,18 @@
             const targetDate = new Date('Mon Jan 29 2029 00:00:00 GMT+0200');
             const now = new Date();
             const difference = targetDate - now;
-            const {days, hours, minutes, months, years} = getPreciseTimeDifference(now, targetDate);
+            const {days, hours, months, years} = getPreciseTimeDifference(now, targetDate);
             if (difference > 0) {
                 animateNumber('years', years);
                 animateNumber('months', months);
                 animateNumber('days', days);
                 animateNumber('hours', hours);
-                animateNumber('minutes', minutes);
             } else {
                 // Target date has passed
                 document.getElementById('years').textContent = '0';
                 document.getElementById('months').textContent = '0';
                 document.getElementById('days').textContent = '0';
                 document.getElementById('hours').textContent = '0';
-                document.getElementById('minutes').textContent = '0';
             }
         }
 
