@@ -64,12 +64,52 @@
             cursor: pointer;
             transition: all 0.3s ease;
             user-select: none;
+            position: relative;
+        }
+
+        .title.small {
+            font-size: clamp(1.5rem, 3.5vw, 2.5rem);
         }
 
         .title:hover {
             color: #ff3333;
             text-shadow: 0 0 20px rgba(239, 9, 9, 0.5);
             transform: scale(1.05);
+        }
+
+        .fire-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 5;
+        }
+
+        .fire-particle {
+            position: absolute;
+            width: 40px;
+            height: 80px;
+            background: linear-gradient(to top, #ff4500, #ff6500, #ff8500);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: fireRise 0.8s ease-out forwards;
+        }
+
+        @keyframes fireRise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-80px) scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-160px) scale(0.5);
+                opacity: 0;
+            }
         }
 
         .countdown {
@@ -89,6 +129,17 @@
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
+        }
+
+        .time-unit.celebration {
+            animation: celebrate 2s ease-in-out;
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            25% { transform: translateY(-20px) rotate(-5deg) scale(1.1); }
+            50% { transform: translateY(-30px) rotate(5deg) scale(1.2); }
+            75% { transform: translateY(-20px) rotate(-3deg) scale(1.1); }
         }
 
         .time-unit::before {
@@ -345,6 +396,34 @@
                 opacity: 0;
             }
         }
+
+        /* Fireworks */
+        .firework {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .firework-spark {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        @keyframes fireworkExplode {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 
@@ -363,6 +442,7 @@
 
     <div class="container">
         <h1 class="title" id="titleClick">PENSIOEN DATUM COUNTDOWN</h1>
+        <div class="fire-overlay" id="fireOverlay"></div>
         <div class="countdown">
             <div class="time-unit">
                 <span class="number" id="years">0</span>
@@ -411,8 +491,10 @@
 
     <script>
         // Global variables
-        let targetDate = new Date('Mon Jan 29 2029 00:00:00 GMT+0200');
+        let targetDate = new Date('Jan 29 2022 00:00:00 GMT+0200');
         let countdownInterval;
+        let isTimeUp = false;
+        let originalTitle = 'PENSIOEN DATUM COUNTDOWN';
 
         // Modal elements
         const dateModal = document.getElementById('dateModal');
@@ -425,6 +507,13 @@
         const setTextBtn = document.getElementById('setText');
         const cancelTextBtn = document.getElementById('cancelText');
         const subtitleText = document.getElementById('subtitleText');
+        const fireOverlay = document.getElementById('fireOverlay');
+
+        // Global function for debugging
+        window.forceOutOfTimeSequence = function() {
+            isTimeUp = true;
+            startEndSequence();
+        };
 
         // Event listeners
         titleElement.addEventListener('click', openEditTextModal);
@@ -464,6 +553,7 @@
         });
 
         function openModal() {
+            if (isTimeUp) return;
             // Set current target date as default value
             const currentDateTime = new Date(targetDate.getTime() - (targetDate.getTimezoneOffset() * 60000));
             customDateInput.value = currentDateTime.toISOString().slice(0, 16);
@@ -472,6 +562,7 @@
         }
 
         function openEditTextModal() {
+            if (isTimeUp) return;
             // Set current title as default value
             customTextInput.value = titleElement.textContent;
             textModal.style.display = 'block';
@@ -501,6 +592,7 @@
             }
 
             targetDate = selectedDate;
+            isTimeUp = false;
             updateSubtitle();
             updateCountdown();
             closeDateModal();
@@ -519,7 +611,8 @@
                 return;
             }
 
-            titleElement.textContent = newText.toUpperCase();
+            originalTitle = newText.toUpperCase();
+            titleElement.textContent = originalTitle;
             closeTextModal();
         }
 
@@ -535,6 +628,8 @@
         }
 
         function updateCountdown() {
+            if (isTimeUp) return;
+            
             const now = new Date();
             const difference = targetDate - now;
             const {days, hours, months, years} = getPreciseTimeDifference(now, targetDate);
@@ -546,10 +641,10 @@
                 animateNumber('hours', hours);
             } else {
                 // Target date has passed
-                document.getElementById('years').textContent = '0';
-                document.getElementById('months').textContent = '0';
-                document.getElementById('days').textContent = '0';
-                document.getElementById('hours').textContent = '0';
+                if (!isTimeUp) {
+                    isTimeUp = true;
+                    startEndSequence();
+                }
             }
         }
 
@@ -566,6 +661,159 @@
                     element.style.transform = 'scale(1)';
                 }, 150);
             }
+        }
+
+        function startEndSequence() {
+            // Set all counters to 0
+            document.getElementById('years').textContent = '0';
+            document.getElementById('months').textContent = '0';
+            document.getElementById('days').textContent = '0';
+            document.getElementById('hours').textContent = '0';
+
+            // Add celebration animation to time units
+            const timeUnits = document.querySelectorAll('.time-unit');
+            timeUnits.forEach(unit => {
+                unit.classList.add('celebration');
+            });
+
+            // Create fireworks
+            createFireworks();
+
+            // Start typewriter effect after 2 seconds
+            setTimeout(() => {
+                startTypewriterSequence();
+            }, 2000);
+        }
+
+        function createFireworks() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500'];
+            
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    firework.style.left = Math.random() * window.innerWidth + 'px';
+                    firework.style.top = Math.random() * window.innerHeight + 'px';
+                    firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    document.body.appendChild(firework);
+
+                    // Create sparks
+                    for (let j = 0; j < 12; j++) {
+                        const spark = document.createElement('div');
+                        spark.className = 'firework-spark';
+                        spark.style.left = firework.style.left;
+                        spark.style.top = firework.style.top;
+                        spark.style.backgroundColor = firework.style.backgroundColor;
+                        
+                        const angle = (j * 30) * Math.PI / 180;
+                        const distance = 50 + Math.random() * 50;
+                        const endX = Math.cos(angle) * distance;
+                        const endY = Math.sin(angle) * distance;
+                        
+                        spark.style.animation = `fireworkExplode 1s ease-out forwards`;
+                        spark.style.transform = `translate(${endX}px, ${endY}px)`;
+                        
+                        document.body.appendChild(spark);
+                        
+                        setTimeout(() => {
+                            spark.remove();
+                        }, 1000);
+                    }
+
+                    setTimeout(() => {
+                        firework.remove();
+                    }, 1000);
+                }, i * 200);
+            }
+        }
+
+        function startTypewriterSequence() {
+            titleElement.textContent = '';
+            titleElement.classList.add('small');
+            titleElement.style.cursor = 'default';
+            
+            const message = "THIS PROGRAM WILL SELF DESTRUCT IN 5 SECONDS";
+            
+            typewriterEffect(titleElement, message, 50, () => {
+                startCountdownSequence();
+            });
+        }
+
+        function startCountdownSequence() {
+            let count = 5;
+            
+            const countdownInterval = setInterval(() => {
+                // Find the number in the title and replace it
+                const currentText = titleElement.textContent;
+                const newText = currentText.replace(/\d+/, count.toString());
+                
+                // Clear and retype just the number
+                const numberIndex = newText.indexOf(count.toString());
+                titleElement.textContent = newText.substring(0, numberIndex);
+                
+                titleElement.innerText = newText;
+                
+                if (count === 0) {
+                    clearInterval(countdownInterval);
+                    setTimeout(() => {
+                        startFireEffect();
+                    }, 500);
+                }
+                count--;
+            }, 1000);
+        }
+
+        function typewriterEffect(element, text, speed, callback) {
+            const currentText = element.textContent;
+            let i = 0;
+            
+            const typeInterval = setInterval(() => {
+                element.textContent = currentText + text.substring(0, i + 1);
+                i++;
+                
+                if (i >= text.length) {
+                    clearInterval(typeInterval);
+                    if (callback) callback();
+                }
+            }, speed);
+        }
+
+        function startFireEffect() {
+            fireOverlay.style.opacity = '1';
+            
+            const titleRect = titleElement.getBoundingClientRect();
+            const containerRect = titleElement.parentElement.getBoundingClientRect();
+            
+            // Create fire particles
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'fire-particle';
+                    
+                    const x = Math.random() * titleRect.width;
+                    const y = titleRect.height;
+                    
+                    particle.style.left = x + 'px';
+                    particle.style.top = y + 'px';
+                    
+                    fireOverlay.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 800);
+                }, i * 20);
+            }
+            
+            // Fade out the title as fire consumes it
+            setTimeout(() => {
+                titleElement.style.transition = 'opacity 2s ease-out';
+                titleElement.style.opacity = '0';
+                
+                setTimeout(() => {
+                    titleElement.textContent = '';
+                    fireOverlay.style.opacity = '0';
+                }, 2000);
+            }, 1000);
         }
 
         function getPreciseTimeDifference(date1, date2) {
@@ -643,14 +891,13 @@
                 years: years,
                 months: months,
                 days: days,
-                hours: hours,
-                minutes: minutes,
+                hours: hours !== 0 ? hours : minutes !== 0 ? 1 : hours,
             };
         }
 
         // Initialize countdown
         updateCountdown();
-        countdownInterval = setInterval(updateCountdown, 100000);
+        countdownInterval = setInterval(updateCountdown, 10000);
     </script>
 </body>
 
