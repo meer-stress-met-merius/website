@@ -61,6 +61,15 @@
             color: #ef0909;
             margin-bottom: 3rem;
             letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .title:hover {
+            color: #ff3333;
+            text-shadow: 0 0 20px rgba(239, 9, 9, 0.5);
+            transform: scale(1.05);
         }
 
         .countdown {
@@ -129,6 +138,108 @@
             color: #ef0909;
             font-weight: 400;
             opacity: 0.8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .subtitle:hover {
+            opacity: 1;
+            transform: scale(1.02);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #2e2a98 0%, #413db3 100%);
+            margin: 15% auto;
+            padding: 2rem;
+            border: 2px solid rgba(232, 244, 248, 0.3);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal h2 {
+            color: #e8f4f8;
+            font-family: 'Orbitron', monospace;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .date-input, .text-input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            font-family: 'Orbitron', monospace;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(232, 244, 248, 0.3);
+            border-radius: 10px;
+            color: #e8f4f8;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .date-input:focus, .text-input:focus {
+            outline: none;
+            border-color: #ef0909;
+            box-shadow: 0 0 10px rgba(239, 9, 9, 0.3);
+        }
+
+        .text-input::placeholder {
+            color: rgba(232, 244, 248, 0.6);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .btn-primary {
+            background: #ef0909;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #ff3333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(239, 9, 9, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e8f4f8;
+            border: 2px solid rgba(232, 244, 248, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
         }
 
         @media (max-width: 768px) {
@@ -139,6 +250,15 @@
             .time-unit {
                 min-width: 100px;
                 padding: 1.5rem 1rem;
+            }
+
+            .modal-content {
+                margin: 25% auto;
+                padding: 1.5rem;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
             }
         }
 
@@ -242,7 +362,7 @@
     </div>
 
     <div class="container">
-        <h1 class="title">PENSIOEN DATUM COUNTDOWN</h1>
+        <h1 class="title" id="titleClick">PENSIOEN DATUM COUNTDOWN</h1>
         <div class="countdown">
             <div class="time-unit">
                 <span class="number" id="years">0</span>
@@ -261,15 +381,164 @@
                 <span class="label">Hours</span>
             </div>
         </div>
-        <p class="subtitle">Until January 29, 2029</p>
+        <p class="subtitle" id="subtitleText">Until January 29, 2029</p>
+    </div>
+
+    <!-- Date Modal -->
+    <div id="dateModal" class="modal">
+        <div class="modal-content">
+            <h2>Set Custom Date</h2>
+            <h2>maand/dag/jaar</h2>
+            <input type="datetime-local" id="customDate" class="date-input" />
+            <div class="modal-buttons">
+                <button class="btn btn-primary" id="setDate">Set Date</button>
+                <button class="btn btn-secondary" id="cancelDate">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Text Edit Modal -->
+    <div id="textModal" class="modal">
+        <div class="modal-content">
+            <h2>Edit Title Text</h2>
+            <input type="text" id="customText" class="text-input" placeholder="Enter your custom title..." maxlength="50" />
+            <div class="modal-buttons">
+                <button class="btn btn-primary" id="setText">Set Title</button>
+                <button class="btn btn-secondary" id="cancelText">Cancel</button>
+            </div>
+        </div>
     </div>
 
     <script>
+        // Global variables
+        let targetDate = new Date('Mon Jan 29 2029 00:00:00 GMT+0200');
+        let countdownInterval;
+
+        // Modal elements
+        const dateModal = document.getElementById('dateModal');
+        const textModal = document.getElementById('textModal');
+        const titleElement = document.getElementById('titleClick');
+        const customDateInput = document.getElementById('customDate');
+        const customTextInput = document.getElementById('customText');
+        const setDateBtn = document.getElementById('setDate');
+        const cancelDateBtn = document.getElementById('cancelDate');
+        const setTextBtn = document.getElementById('setText');
+        const cancelTextBtn = document.getElementById('cancelText');
+        const subtitleText = document.getElementById('subtitleText');
+
+        // Event listeners
+        titleElement.addEventListener('click', openEditTextModal);
+        subtitleText.addEventListener("click", openModal);
+        setDateBtn.addEventListener('click', setCustomDate);
+        cancelDateBtn.addEventListener('click', closeDateModal);
+        setTextBtn.addEventListener('click', setCustomText);
+        cancelTextBtn.addEventListener('click', closeTextModal);
+        
+        // Close modals when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === dateModal) {
+                closeDateModal();
+            }
+            if (event.target === textModal) {
+                closeTextModal();
+            }
+        });
+
+        // Close modals with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                if (dateModal.style.display === 'block') {
+                    closeDateModal();
+                }
+                if (textModal.style.display === 'block') {
+                    closeTextModal();
+                }
+            }
+        });
+
+        // Enter key support for text input
+        customTextInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                setCustomText();
+            }
+        });
+
+        function openModal() {
+            // Set current target date as default value
+            const currentDateTime = new Date(targetDate.getTime() - (targetDate.getTimezoneOffset() * 60000));
+            customDateInput.value = currentDateTime.toISOString().slice(0, 16);
+            dateModal.style.display = 'block';
+            customDateInput.focus();
+        }
+
+        function openEditTextModal() {
+            // Set current title as default value
+            customTextInput.value = titleElement.textContent;
+            textModal.style.display = 'block';
+            customTextInput.focus();
+            customTextInput.select(); // Select all text for easy editing
+        }
+
+        function closeDateModal() {
+            dateModal.style.display = 'none';
+        }
+
+        function closeTextModal() {
+            textModal.style.display = 'none';
+        }
+
+        function setCustomDate() {
+            const selectedDate = new Date(customDateInput.value);
+            
+            if (isNaN(selectedDate.getTime())) {
+                alert('Please enter a valid date and time.');
+                return;
+            }
+
+            if (selectedDate <= new Date()) {
+                alert('Please select a future date and time.');
+                return;
+            }
+
+            targetDate = selectedDate;
+            updateSubtitle();
+            updateCountdown();
+            closeDateModal();
+        }
+
+        function setCustomText() {
+            const newText = customTextInput.value.trim();
+            
+            if (newText === '') {
+                alert('Please enter a title text.');
+                return;
+            }
+
+            if (newText.length > 50) {
+                alert('Title text must be 50 characters or less.');
+                return;
+            }
+
+            titleElement.textContent = newText.toUpperCase();
+            closeTextModal();
+        }
+
+        function updateSubtitle() {
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            subtitleText.textContent = `Until ${targetDate.toLocaleDateString('en-US', options)}`;
+        }
+
         function updateCountdown() {
-            const targetDate = new Date('Mon Jan 29 2029 00:00:00 GMT+0200');
             const now = new Date();
             const difference = targetDate - now;
             const {days, hours, months, years} = getPreciseTimeDifference(now, targetDate);
+            
             if (difference > 0) {
                 animateNumber('years', years);
                 animateNumber('months', months);
@@ -322,12 +591,9 @@
             let current = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), startDate.getHours(), startDate.getMinutes());
             let tempEndDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), endDate.getHours(), endDate.getMinutes());
 
-
             // Adjust current date to only consider up to the hour for calendar calculation
-            // We've already taken care of the exact minutes and hours difference above
             current.setHours(0, 0, 0, 0);
             tempEndDate.setHours(0, 0, 0, 0);
-
 
             // Calculate years
             while (current.getFullYear() < tempEndDate.getFullYear() ||
@@ -336,12 +602,9 @@
 
                 let nextYear = new Date(current.getFullYear() + 1, current.getMonth(), current.getDate());
 
-                // Handle end of month issues for next year (e.g., Feb 29 -> March 1)
-                // If nextYear's month or date changes due to month end (e.g. Jan 31 -> Feb 31 -> Mar 2), it's not a full year
                 if (nextYear.getMonth() !== current.getMonth() || nextYear.getDate() !== current.getDate()) {
-                    nextYear = new Date(current.getFullYear() + 1, current.getMonth() + 1, 0); // Last day of that month next year
+                    nextYear = new Date(current.getFullYear() + 1, current.getMonth() + 1, 0);
                 }
-
 
                 if (nextYear.getTime() <= tempEndDate.getTime()) {
                     years++;
@@ -358,9 +621,8 @@
 
                 let nextMonth = new Date(current.getFullYear(), current.getMonth() + 1, current.getDate());
 
-                // Handle end of month issues (e.g., Jan 31 -> Feb 31 should be Feb 28/29)
                 if (nextMonth.getMonth() !== (current.getMonth() + 1) % 12 || nextMonth.getFullYear() !== current.getFullYear() + Math.floor((current.getMonth() + 1) / 12)) {
-                    nextMonth = new Date(current.getFullYear(), current.getMonth() + 1, 0); // Last day of the next month
+                    nextMonth = new Date(current.getFullYear(), current.getMonth() + 1, 0);
                 }
 
                 if (nextMonth.getTime() <= tempEndDate.getTime()) {
@@ -371,14 +633,11 @@
                 }
             }
 
-
             // Calculate days
-            // At this point, current is almost endDate, just need to count days
-            while (current.getTime() <= tempEndDate.getTime() - (1000 * 60 * 60 * 24)) { // Ensure we don't count partial days
+            while (current.getTime() <= tempEndDate.getTime() - (1000 * 60 * 60 * 24)) {
                 days++;
                 current.setDate(current.getDate() + 1);
             }
-
 
             return {
                 years: years,
@@ -389,9 +648,9 @@
             };
         }
 
-        // Update countdown immediately and then every second
+        // Initialize countdown
         updateCountdown();
-        setInterval(updateCountdown, 100000);
+        countdownInterval = setInterval(updateCountdown, 100000);
     </script>
 </body>
 
