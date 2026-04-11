@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Counter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #1a0a1e;
+            font-family: 'Georgia', serif;
+            color: #f0c0d0;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+            color: #f4a0b8;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: #b07090;
+            margin-bottom: 0.4rem;
+            text-align: center;
+        }
+
+        .summary {
+            font-size: 0.85rem;
+            color: #906070;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3rem;
+            max-width: 900px;
+        }
+
+        #current-heart-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            min-height: 260px;
+        }
+
+        .current-heart {
+            width: min(100dvw, 100dvh);
+            height: min(100dvw, 100dvh);
+            position: relative;
+            filter: drop-shadow(0 0 20px rgba(220, 60, 100, 0.5));
+            transition: filter 0.3s;
+        }
+
+        .current-heart:hover {
+            filter: drop-shadow(0 0 25px rgba(220, 60, 100, 0.7));
+        }
+
+        .current-heart.gold {
+            filter: drop-shadow(0 0 20px rgba(255, 200, 50, 0.55));
+        }
+
+        .current-heart.gold:hover {
+            filter: drop-shadow(0 0 25px rgba(255, 200, 50, 0.75));
+        }
+
+        .current-heart.silver {
+            filter: drop-shadow(0 0 20px rgba(180, 200, 220, 0.5));
+        }
+
+        .current-heart.silver:hover {
+            filter: drop-shadow(0 0 25px rgba(180, 200, 220, 0.7));
+        }
+
+        .current-label {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: 0.85rem;
+            color: #f0c0d0;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .completed-section {
+            width: 100%;
+            text-align: center;
+        }
+
+        .completed-title {
+            font-size: 0.9rem;
+            color: #b07090;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #completed-hearts {
+            display: grid;
+            grid-template-columns: repeat(var(--cols, 4), 1fr);
+            gap: 0.8rem;
+            padding: 1.5rem;
+            background: rgba(30, 15, 30, 0.5);
+            border-radius: 8px;
+            margin: 0 auto;
+            width: fit-content;
+        }
+
+        .completed-heart {
+            position: relative;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+        }
+
+        .completed-heart:hover {
+            transform: scale(1.12);
+        }
+
+        .completed-heart.gold {
+            filter: drop-shadow(0 0 4px rgba(255, 200, 50, 0.4));
+        }
+
+        .completed-heart.silver {
+            filter: drop-shadow(0 0 3px rgba(180, 200, 220, 0.35));
+        }
+
+        .completed-heart.red {
+            filter: drop-shadow(0 0 3px rgba(220, 60, 100, 0.3));
+        }
+
+        .last-row-wrapper {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .empty-msg {
+            font-size: 1.1rem;
+            color: #906070;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        dialog {
+            background: #2a1a2e;
+            border: 2px solid #d44070;
+            border-radius: 12px;
+            color: #f0c0d0;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        dialog h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: #f4a0b8;
+        }
+
+        dialog input[type="date"] {
+            width: 100%;
+            padding: 0.7rem;
+            margin-bottom: 1.5rem;
+            background: #1a0a1e;
+            border: 1px solid #906070;
+            border-radius: 6px;
+            color: #f0c0d0;
+            font-size: 1rem;
+        }
+
+        dialog input[type="date"]:focus {
+            outline: none;
+            border-color: #d44070;
+            box-shadow: 0 0 8px rgba(212, 64, 112, 0.3);
+        }
+
+        .dialog-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        dialog button {
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #time-travel-submit {
+            background: #d44070;
+            color: #fff;
+        }
+
+        #time-travel-submit:hover {
+            background: #e85080;
+            box-shadow: 0 0 12px rgba(212, 64, 112, 0.4);
+        }
+
+        #time-travel-cancel {
+            background: #3a2a3e;
+            color: #b07090;
+            border: 1px solid #906070;
+        }
+
+        #time-travel-cancel:hover {
+            background: #4a3a4e;
+            color: #f0c0d0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>💕 Our Time Together 💕</h1>
+    <div class="subtitle">Since February 11, 2026</div>
+    <div class="summary" id="summary"></div>
+
+    <div class="main-container">
+        <div class="completed-section">
+            <div id="completed-hearts"></div>
+        </div>
+        <div id="current-heart-container"></div>
+    </div>
+
+    <dialog id="time-travel-dialog">
+        <h2>⏳ Forward Time</h2>
+        <input type="date" id="time-travel-input">
+        <div class="dialog-buttons">
+            <button id="time-travel-cancel">Cancel</button>
+            <button id="time-travel-submit">Go</button>
+        </div>
+    </dialog>
+
+    <script>
+        const START_DATE = new Date(2026, 1, 11);
+        let currentDate = new Date();
+
+        const HEART = "M60 100 C60 100,10 65,10 40 C10 15,35 10,60 35 C85 10,110 15,110 40 C110 65,60 100,60 100Z";
+
+        function miniHeart(cx, cy, s) {
+            return `M${cx} ${cy + s * 1.1}C${cx} ${cy + s * 1.1},${cx - s * .9} ${cy + s * .35},${cx - s * .9} ${cy - s * .1}C${cx - s * .9} ${cy - s * .55},${cx - s * .45} ${cy - s * .65},${cx} ${cy - s * .2}C${cx + s * .45} ${cy - s * .65},${cx + s * .9} ${cy - s * .55},${cx + s * .9} ${cy - s * .1}C${cx + s * .9} ${cy + s * .35},${cx} ${cy + s * 1.1},${cx} ${cy + s * 1.1}Z`;
+        }
+
+        const THEMES = {
+            gold: {
+                outline: { fill: '#d4a020', stroke: '#e8b830', sw: 2.5 },
+                filled: { fill: '#fff4b0', filter: 'drop-shadow(0 0 3px rgba(255,220,80,0.7))' },
+                empty: { fill: 'none', stroke: '#8a6a10', sw: 1.5 },
+            },
+            silver: {
+                outline: { fill: '#8898a8', stroke: '#a0b4c4', sw: 2.5 },
+                filled: { fill: '#e4eaf0', filter: 'drop-shadow(0 0 3px rgba(180,200,220,0.7))' },
+                empty: { fill: 'none', stroke: '#506070', sw: 1.5 },
+            },
+            red: {
+                outline: { fill: 'rgba(200,40,80,0.12)', stroke: '#e05080', sw: 2 },
+                filled: { fill: '#e84080', filter: 'drop-shadow(0 0 3px rgba(232,64,128,0.6))' },
+                empty: { fill: 'none', stroke: '#602040', sw: 1.5 },
+            },
+            partial: {
+                outline: { fill: 'rgba(200,40,80,0.05)', stroke: '#903050', sw: 2, dash: '4 3' },
+                filled: { fill: '#e84080', filter: 'drop-shadow(0 0 3px rgba(232,64,128,0.6))' },
+                empty: { fill: 'none', stroke: '#602040', sw: 1.5 },
+            },
+        };
+
+        function buildHeartSVG(theme, filledCount, scale = 1) {
+            const t = THEMES[theme];
+            const vb = 120 / scale;
+            const pos = [[44, 42], [76, 42], [44, 68], [76, 68]];
+            const s = 12;
+            const smalls = pos.map((p, i) => {
+                if (i < filledCount) {
+                    return `<path d="${miniHeart(p[0], p[1], s)}" fill="${t.filled.fill}" filter="${t.filled.filter}"/>`;
+                }
+                return `<path d="${miniHeart(p[0], p[1], s)}" fill="${t.empty.fill}" stroke="${t.empty.stroke}" stroke-width="${t.empty.sw}"/>`;
+            }).join('');
+
+            const dash = t.outline.dash ? ` stroke-dasharray="${t.outline.dash}"` : '';
+
+            return `<svg viewBox="0 0 120 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+    <path d="${HEART}" fill="${t.outline.fill}" stroke="${t.outline.stroke}" stroke-width="${t.outline.sw}"${dash}/>
+    ${smalls}
+  </svg>`;
+        }
+
+        function calculate(date) {
+            let totalMonths =
+                (date.getFullYear() - START_DATE.getFullYear()) * 12 +
+                (date.getMonth() - START_DATE.getMonth());
+            if (date.getDate() < 11) totalMonths--;
+            totalMonths = Math.max(0, totalMonths);
+
+            const years = Math.floor(totalMonths / 12);
+            let rem = totalMonths % 12;
+            const quarters = Math.floor(rem / 3);
+            const months = rem % 3;
+
+            let lastAnchor;
+            if (date.getDate() >= 11) {
+                lastAnchor = new Date(date.getFullYear(), date.getMonth(), 11);
+            } else {
+                lastAnchor = new Date(date.getFullYear(), date.getMonth() - 1, 11);
+            }
+            const weeks = Math.min(Math.floor((date - lastAnchor) / 864e5 / 7), 4);
+
+            return { totalMonths, years, quarters, months, weeks };
+        }
+
+        function periodLabel(monthOffset) {
+            const d = new Date(START_DATE);
+            d.setMonth(d.getMonth() + monthOffset);
+            return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        }
+
+        function rangeLabel(startOffset, count) {
+            return periodLabel(startOffset) + ' – ' + periodLabel(startOffset + count - 1);
+        }
+
+        function render() {
+            const currentEl = document.getElementById('current-heart-container');
+            const completedEl = document.getElementById('completed-hearts');
+            const summaryEl = document.getElementById('summary');
+
+            if (currentDate < START_DATE) {
+                currentEl.innerHTML = `<div class="empty-msg">The journey hasn't started yet!</div>`;
+                completedEl.innerHTML = '';
+                summaryEl.textContent = '';
+                return;
+            }
+
+            const { totalMonths, years, quarters, months, weeks } = calculate(currentDate);
+
+            // Summary text
+            const parts = [];
+            if (years) parts.push(`${years} year${years > 1 ? 's' : ''}`);
+            if (quarters) parts.push(`${quarters * 3} month${quarters * 3 > 1 ? 's' : ''}`);
+            if (months) parts.push(`${months} month${months > 1 ? 's' : ''}`);
+            if (weeks) parts.push(`${weeks} week${weeks > 1 ? 's' : ''}`);
+            summaryEl.textContent = parts.length ? parts.join(', ') : 'Just getting started…';
+
+            // Build completed hearts list
+            let hearts = [];
+            let offset = 0;
+
+            for (let i = 0; i < years; i++) {
+                hearts.push({ type: 'gold', label: rangeLabel(offset, 12) });
+                offset += 12;
+            }
+            for (let i = 0; i < quarters; i++) {
+                hearts.push({ type: 'silver', label: rangeLabel(offset, 3) });
+                offset += 3;
+            }
+            for (let i = 0; i < months; i++) {
+                hearts.push({ type: 'red', label: periodLabel(offset) });
+                offset += 1;
+            }
+
+            const completedCount = hearts.length;
+            const cols = completedCount <= 9 ? 3 : 4;
+            completedEl.style.setProperty('--cols', cols);
+
+            let completedHTML = '';
+
+            if (completedCount === 0) {
+                completedHTML = '<div style="color: #604050; font-size: 0.9rem;">No completed hearts yet</div>';
+            } else {
+                const heartsInLastRow = completedCount % cols;
+                const heartsInFullRows = completedCount - heartsInLastRow;
+
+                // Full rows
+                for (let i = 0; i < heartsInFullRows; i++) {
+                    const heart = hearts[i];
+                    const svg = buildHeartSVG(heart.type, 4);
+                    completedHTML += `<div class="completed-heart ${heart.type}" title="${heart.label}">${svg}</div>`;
+                }
+
+                // Last row (centered if incomplete)
+                if (heartsInLastRow > 0) {
+                    completedHTML += '<div class="last-row-wrapper">';
+                    for (let i = heartsInFullRows; i < completedCount; i++) {
+                        const heart = hearts[i];
+                        const svg = buildHeartSVG(heart.type, 4);
+                        completedHTML += `<div class="completed-heart ${heart.type}" title="${heart.label}">${svg}</div>`;
+                    }
+                    completedHTML += '</div>';
+                }
+            }
+
+            completedEl.innerHTML = completedHTML;
+
+            // Current heart
+            let currentHTML = '';
+            if (weeks > 0) {
+                currentHTML = `<div class="current-heart partial">
+      ${buildHeartSVG('partial', weeks)}
+      <div class="current-label">${periodLabel(offset)}<br><span style="font-size:0.75rem;color:#906070;">${weeks} of 4 weeks</span></div>
+    </div>`;
+            } else if (months > 0 || quarters > 0 || years > 0) {
+                if (months > 0) {
+                    currentHTML = `<div class="current-heart red">
+        ${buildHeartSVG('red', 4)}
+        <div class="current-label">${periodLabel(offset)}<br><span style="font-size:0.75rem;color:#906070;">Month in progress</span></div>
+      </div>`;
+                } else if (quarters > 0) {
+                    currentHTML = `<div class="current-heart silver">
+        ${buildHeartSVG('silver', 4)}
+        <div class="current-label">${rangeLabel(offset, 3)}<br><span style="font-size:0.75rem;color:#906070;">Quarter in progress</span></div>
+      </div>`;
+                } else {
+                    currentHTML = `<div class="current-heart gold">
+        ${buildHeartSVG('gold', 4)}
+        <div class="current-label">${rangeLabel(offset, 12)}<br><span style="font-size:0.75rem;color:#906070;">Year in progress</span></div>
+      </div>`;
+                }
+            } else {
+                currentHTML = `<div class="current-heart partial">
+      ${buildHeartSVG('partial', 0)}
+      <div class="current-label">First week<br><span style="font-size:0.75rem;color:#906070;">Just started!</span></div>
+    </div>`;
+            }
+
+            currentEl.innerHTML = currentHTML;
+        }
+
+        window.setDate = function (dateStr) {
+            const d = new Date(dateStr + 'T12:00:00');
+            if (isNaN(d)) { console.error('Invalid date. Use YYYY-MM-DD'); return; }
+            currentDate = d;
+            console.log('Date set to:', d.toDateString());
+            render();
+        };
+
+        // Double-tap to open time travel dialog
+        document.addEventListener('dblclick', (e) => {
+            const dialog = document.getElementById('time-travel-dialog');
+            const input = document.getElementById('time-travel-input');
+
+            // Set input to today's date in YYYY-MM-DD format
+            const year = currentDate.getFullYear();
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+            const day = String(currentDate.getDate()).padStart(2, '0');
+            input.value = `${year}-${month}-${day}`;
+
+            dialog.showModal();
+        });
+
+        // Cancel button
+        document.getElementById('time-travel-cancel').addEventListener('click', () => {
+            document.getElementById('time-travel-dialog').close();
+        });
+
+        // Submit button
+        document.getElementById('time-travel-submit').addEventListener('click', () => {
+            const input = document.getElementById('time-travel-input');
+            if (input.value) {
+                setDate(input.value);
+                document.getElementById('time-travel-dialog').close();
+            }
+        });
+
+        // Allow Enter key to submit
+        document.getElementById('time-travel-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('time-travel-submit').click();
+            }
+        });
+
+        render();
+    </script>
+</body>
+
+</html>
